@@ -1,0 +1,11 @@
+{
+    "name": "clementdecou/simply-mvc",
+    "autoload": {
+        "psr-4": {
+            "Simply\\Mvc\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/http-foundation": "^5.3"
+    }
+}
