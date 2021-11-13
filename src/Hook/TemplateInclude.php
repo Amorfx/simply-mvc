@@ -9,7 +9,6 @@ use Simply\Mvc\Application;
 use Simply\Mvc\Request;
 use Simply\Mvc\Routing\WordPressRouteMatcher;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Service\ServiceSubscriberTrait;
 use Simply\Mvc\Routing\Router;
@@ -20,7 +19,8 @@ class TemplateInclude implements ServiceSubscriberInterface {
     public static function getSubscribedServices() {
         return array(
             Router::class,
-            WordPressRouteMatcher::class
+            WordPressRouteMatcher::class,
+            ArgumentResolver::class => 'argument_resolver'
         );
     }
 
@@ -29,16 +29,14 @@ class TemplateInclude implements ServiceSubscriberInterface {
         $request = Request::createFromGlobals();
         $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
         $application = new Application(Simply::getContainer(), $request);
-        $argumentResolver = new ArgumentResolver(null, array(new ArgumentResolver\ServiceValueResolver(Simply::getContainer())));
         foreach ($this->getRouter()->getAll() as $r) {
             if ($this->getMatcher()->match($r, $request)) {
                 // TODO get with container
                 $controller = $r->getController();
                 $controller = Simply::get($controller);
                 $request->attributes->set('_controller', array($controller::class, $r->getAction()));
-                $arguments = $argumentResolver->getArguments($request, array($controller, $r->getAction()));
-                var_dump($arguments); die;
-                $response = call_user_func_array(array($controller, $r->getAction()), array($application->getRequest()));
+                $arguments = $this->getArgumentResolver()->getArguments($request, array($controller, $r->getAction()));
+                $response = call_user_func_array(array($controller, $r->getAction()), $arguments);
                 $response->send();
                 return false;
             }
@@ -52,5 +50,9 @@ class TemplateInclude implements ServiceSubscriberInterface {
 
     public function getMatcher(): WordPressRouteMatcher {
         return $this->container->get(WordPressRouteMatcher::class);
+    }
+
+    public function getArgumentResolver() {
+        return $this->container->get(ArgumentResolver::class);
     }
 }
