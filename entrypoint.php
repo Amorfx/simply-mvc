@@ -1,24 +1,25 @@
 <?php
 
-use Simply\Mvc\Route;
-use Simply\Mvc\Router;
-use Simply\Mvc\WordPressRouteMatcher;
+use Simply\Mvc\BasicController;
+use Simply\Mvc\DependencyInjection\FrameworkExtension;
+use Simply\Mvc\Routing\Route;
+use Simply\Mvc\Routing\Router;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$router = new Router();
-$basicRoute = new Route('front', array('GET'), \Simply\Mvc\BasicController::class, 'home');
-$router->add($basicRoute);
-add_filter('template_include', function (string $template) use($router) {
-    $matcher = new WordPressRouteMatcher();
-    foreach ($router->getAll() as $r) {
-        if ($matcher->match($r, 'ok')) {
-            // Todo get with container
-            $controller = $r->getController();
-            $controller = new $controller();
-            call_user_func(array($controller, $r->getAction()));
-            return false;
-        }
-    }
-    return $template;
+add_filter('simply_config_directories', function (array $configurationsPath) {
+    $configurationsPath[] = __DIR__ . '/config';
+    return $configurationsPath;
 });
+
+add_filter('simply_container_extensions', function(array $extensions) {
+    $extensions[] = new FrameworkExtension();
+    return $extensions;
+});
+
+add_action('after_setup_theme', function() {
+    $router = Simply::get(Router::class);
+    $basicRoute = new Route('front', array('GET'), BasicController::class, 'home');
+    $router->add($basicRoute);
+});
+

@@ -2,8 +2,12 @@
 
 namespace Simply\Mvc;
 
-class BasicController {
-    public function home() {
-        echo('home ok in controllefr');
+use Simply\Core\Template\TemplateEngine;
+use Simply\Mvc\Controller\AbstractController;
+use Simply\Mvc\Routing\WordPressRouteMatcher;
+
+class BasicController extends AbstractController{
+    public function home(WordPressRouteMatcher $matcher) {
+        die('home');
     }
 }

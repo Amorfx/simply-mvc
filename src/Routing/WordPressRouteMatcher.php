@@ -1,6 +1,8 @@
 <?php
 
-namespace Simply\Mvc;
+namespace Simply\Mvc\Routing;
+
+use Simply\Mvc\Request;
 
 class WordPressRouteMatcher {
     private static $mappConditions = array(
@@ -19,7 +21,7 @@ class WordPressRouteMatcher {
         'tax' => 'is_tax',
     );
 
-    public function match(Route $route, $request): bool {
+    public function match(Route $route, Request $request): bool {
         $result = false;
         if (array_key_exists($route->getWordpressCondition(), self::$mappConditions)) {
             $result = call_user_func(self::$mappConditions[$route->getWordpressCondition()]);

@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    autowire: true
+
+
+
+  Simply\Mvc\:
+    resource: '../src/'
+    public: true
+    exclude:
+      - '../src/Application.php'
+      - '../src/Routing/Route.php'
+
+  Simply\Mvc\Hook\TemplateInclude:
+    tags: ['container.service_subscriber']
+
+  Simply\Mvc\BasicController:
+    public: true
+    autowire: true
+    tags: ['controller.service_arguments']
+
+  argument_resolver.service:
+    class:
+
