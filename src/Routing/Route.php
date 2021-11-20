@@ -2,6 +2,8 @@
 
 namespace Simply\Mvc\Routing;
 
+use JetBrains\PhpStorm\Pure;
+
 class Route {
     /**
      * WordPress template condition like single, front, home, category etc.
@@ -38,12 +40,14 @@ class Route {
      * @param array $methods
      * @param string $controller
      * @param string $action
+     * @param string|object|bool $customCondition
      */
-    public function __construct(string $wordpressCondition, array $methods, string $controller, string $action) {
+    public function __construct(string $wordpressCondition, array $methods, string $controller, string $action, string|object|bool $customCondition = false) {
         $this->wordpressCondition = $wordpressCondition;
         $this->methods = $methods;
         $this->controller = $controller;
         $this->action = $action;
+        $this->customCondition = $customCondition;
     }
 
     /**
@@ -114,5 +118,15 @@ class Route {
      */
     public function setCustomCondition(object|string $customCondition): void {
         $this->customCondition = $customCondition;
+    }
+
+    /**
+     * Used to get instance after var export in cached container
+     * @param $array
+     *
+     * @return static
+     */
+    #[Pure] public static function __set_state($array) {
+        return new static(...$array);
     }
 }

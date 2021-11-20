@@ -28,10 +28,11 @@ class TemplateInclude implements ServiceSubscriberInterface {
     public function sendResponse($template) {
         $request = Request::createFromGlobals();
         $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
-        $application = new Application(Simply::getContainer(), $request);
-        foreach ($this->getRouter()->getAll() as $r) {
+        $router = $this->getRouter();
+        $routes = Simply::getContainer()->getParameter('simply.routes');
+        $router->addMultiple($routes);
+        foreach ($router->getAll() as $r) {
             if ($this->getMatcher()->match($r, $request)) {
-                // TODO get with container
                 $controller = $r->getController();
                 $controller = Simply::get($controller);
                 $request->attributes->set('_controller', array($controller::class, $r->getAction()));

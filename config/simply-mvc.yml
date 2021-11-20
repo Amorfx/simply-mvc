@@ -9,6 +9,7 @@ services:
     exclude:
       - '../src/Application.php'
       - '../src/Routing/Route.php'
+      - '../src/Attribute/*'
 
   Simply\Mvc\Hook\TemplateInclude:
     tags: ['container.service_subscriber']

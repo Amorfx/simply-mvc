@@ -1,5 +1,7 @@
 <?php
 
+use Simply\Mvc\DependencyInjection\Compiler\ControllerPass;
+use Simply\Mvc\DependencyInjection\Compiler\RoutePass;
 use Simply\Mvc\DependencyInjection\FrameworkExtension;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,5 +23,6 @@ add_action('simply/core/build', function(ContainerBuilder $container) {
     // Add routing resolver pass simply not symfony
     $container->addCompilerPass(new ControllerArgumentValueResolverPass());
     $container->addCompilerPass(new RegisterLocaleAwareServicesPass());
+    $container->addCompilerPass(new RoutePass());
 });
 

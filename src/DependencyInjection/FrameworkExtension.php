@@ -21,6 +21,7 @@ class FrameworkExtension extends Extension {
         $container->registerForAutoconfiguration(ArgumentValueResolverInterface::class)
             ->addTag('controller.argument_value_resolver');
         $container->registerForAutoconfiguration(AbstractController::class)
-            ->addTag('controller.service_arguments');
+            ->addTag('controller.service_arguments')
+            ->addTag('simply.controller');
     }
 }
