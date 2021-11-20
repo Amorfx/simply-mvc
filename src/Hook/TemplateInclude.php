@@ -16,6 +16,8 @@ use Simply\Mvc\Routing\Router;
 class TemplateInclude implements ServiceSubscriberInterface {
     use ServiceSubscriberTrait;
 
+    protected $templates = array();
+
     public static function getSubscribedServices() {
         return array(
             Router::class,
@@ -26,13 +28,14 @@ class TemplateInclude implements ServiceSubscriberInterface {
 
     #[Filter('template_include')]
     public function sendResponse($template) {
+        var_dump($this->templates); die;
         $request = Request::createFromGlobals();
         $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
         $router = $this->getRouter();
         $routes = Simply::getContainer()->getParameter('simply.routes');
         $router->addMultiple($routes);
         foreach ($router->getAll() as $r) {
-            if ($this->getMatcher()->match($r, $request)) {
+            if ($this->getMatcher()->match($r, $request, $template)) {
                 $controller = $r->getController();
                 $controller = Simply::get($controller);
                 $request->attributes->set('_controller', array($controller::class, $r->getAction()));
@@ -43,6 +46,13 @@ class TemplateInclude implements ServiceSubscriberInterface {
             }
         }
         return $template;
+    }
+
+    #[Filter('single_template_hierarchy')]
+    #[Filter('404_template_hierarchy')]
+    public function addTemplates($templates) {
+        $this->templates = array_merge($this->templates, $templates);
+        return $templates;
     }
 
     public function getRouter(): Router {
