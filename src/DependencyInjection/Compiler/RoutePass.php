@@ -29,7 +29,8 @@ class RoutePass implements CompilerPassInterface {
                         $route->getWpCondition(),
                         $route->getMethods(),
                         $definition->getClass(),
-                        $m->getName()
+                        $m->getName(),
+                        $route->getCustomCondition()
                     );
                 }
             }

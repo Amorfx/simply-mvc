@@ -107,9 +107,9 @@ class Route {
     }
 
     /**
-     * @return object|string
+     * @return object|string|bool
      */
-    public function getCustomCondition(): object|string {
+    public function getCustomCondition(): object|string|bool {
         return $this->customCondition;
     }
 

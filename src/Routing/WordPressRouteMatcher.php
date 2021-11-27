@@ -21,16 +21,19 @@ class WordPressRouteMatcher {
         'tax' => 'is_tax',
     );
 
-    public function match(Route $route, Request $request, string $template): bool {
+    public function match(Route $route, Request $request, array $templates): bool {
         $result = false;
-var_dump($template); die;
+
         // Verify request methods
         $methodsCondition = in_array($request->getMethod(), $route->getMethods());
         if (!$methodsCondition) {
             return false;
         }
 
-        if (array_key_exists($route->getWordpressCondition(), self::$mappConditions)) {
+        // Verify templates
+        if (in_array($route->getWordpressCondition(), $templates)) {
+            $result = true;
+        } elseif (array_key_exists($route->getWordpressCondition(), self::$mappConditions)) {
             $result = call_user_func(self::$mappConditions[$route->getWordpressCondition()]);
             if ($result === false) {
                 return false;

@@ -9,7 +9,7 @@ class Route {
     public function __construct(
         private string $wpCondition,
         private array $methods = array('GET', 'POST'),
-        private string $customCondition = '') {}
+        private string|false $customCondition = false) {}
 
     /**
      * @return string
@@ -19,16 +19,16 @@ class Route {
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     public function getMethods(): array {
         return $this->methods;
     }
 
     /**
-     * @return string
+     * @return string|false
      */
-    public function getCustomCondition(): string {
+    public function getCustomCondition(): string|false {
         return $this->customCondition;
     }
 }
