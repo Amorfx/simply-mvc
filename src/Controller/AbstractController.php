@@ -10,7 +10,7 @@ use Symfony\Contracts\Service\ServiceSubscriberTrait;
 abstract class AbstractController implements ServiceSubscriberInterface {
     use ServiceSubscriberTrait;
 
-    public static function getSubscribedServices() {
+    public static function getSubscribedServices(): array {
         return [
             'twig' => TemplateEngine::class,
         ];

@@ -17,7 +17,7 @@ class TemplateInclude implements ServiceSubscriberInterface {
 
     protected $templates = array();
 
-    public static function getSubscribedServices() {
+    public static function getSubscribedServices(): array {
         return array(
             Router::class,
             WordPressRouteMatcher::class,
