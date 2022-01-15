@@ -1,5 +1,8 @@
 {
     "name": "clementdecou/simply-mvc",
+    "description": "Simply Framework extension to add the availability using MVC pattern in WordPress",
+    "type": "wordpress-muplugin",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Simply\\Mvc\\": "src/"
