@@ -9,4 +9,4 @@ It integrates :
 
 ## Installation
 
-[Read all documentation here](https://amorfx.github.io/simply-documentation/docs/advanced/mvc-pattern)
+[Read all documentation here](https://amorfx.github.io/simply-documentation/advanced/mvc-pattern)
