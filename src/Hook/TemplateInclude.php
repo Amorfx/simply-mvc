@@ -69,10 +69,13 @@ class TemplateInclude implements ServiceSubscriberInterface {
 
         if ($priorityRoute) {
             $controller = $priorityRoute->getController();
-            $controller = Simply::get($controller);
-            $request->attributes->set('_controller', array($controller::class, $r->getAction()));
-            $arguments = $this->getArgumentResolver()->getArguments($request, array($controller, $priorityRoute->getAction()));
-            $response = call_user_func_array(array($controller, $priorityRoute->getAction()), $arguments);
+            /** @var \Simply\Mvc\Controller\ControllerResolver $controllerResolver */
+            $controllerResolver = Simply::get('controller_resolver');
+            $request->attributes->set('_controller', array($controller, $r->getAction()));
+            $controller = $controllerResolver->getController($request);
+            $arguments = $this->getArgumentResolver()->getArguments($request, $controller);
+            // $arguments = $this->getArgumentResolver()->getArguments($request, array($controller, $priorityRoute->getAction()));
+            $response = call_user_func_array($controller, $arguments);
             $response->send();
             return false;
         }

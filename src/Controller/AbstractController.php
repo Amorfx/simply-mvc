@@ -2,13 +2,23 @@
 
 namespace Simply\Mvc\Controller;
 
+use Psr\Container\ContainerInterface;
 use Simply\Core\Template\TemplateEngine;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
 abstract class AbstractController implements ServiceSubscriberInterface {
-    use ServiceSubscriberTrait;
+    protected $container;
+
+    #[Required]
+    public function setContainer(ContainerInterface $container = null): ?ContainerInterface
+    {
+        $previous = $this->container;
+        $this->container = $container;
+
+        return $previous;
+    }
 
     public static function getSubscribedServices(): array {
         return [
@@ -32,7 +42,6 @@ abstract class AbstractController implements ServiceSubscriberInterface {
      */
     protected function render(string $view, array $parameters = [], Response $response = null): Response {
         $content = $this->renderView($view, $parameters);
-
         if (null === $response) {
             $response = new Response();
         }

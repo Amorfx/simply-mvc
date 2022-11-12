@@ -10,6 +10,7 @@ services:
       - '../src/Application.php'
       - '../src/Routing/Route.php'
       - '../src/Attribute/*'
+      - '../src/Controller/ControllerResolver.php'
 
   Simply\Mvc\Hook\TemplateInclude:
     tags: ['container.service_subscriber']
