@@ -74,7 +74,6 @@ class TemplateInclude implements ServiceSubscriberInterface {
             $request->attributes->set('_controller', array($controller, $r->getAction()));
             $controller = $controllerResolver->getController($request);
             $arguments = $this->getArgumentResolver()->getArguments($request, $controller);
-            // $arguments = $this->getArgumentResolver()->getArguments($request, array($controller, $priorityRoute->getAction()));
             $response = call_user_func_array($controller, $arguments);
             $response->send();
             return false;
