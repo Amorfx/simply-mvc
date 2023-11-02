@@ -1,6 +1,7 @@
 <?php
 
 use Simply\Mvc\Controller\ControllerResolver;
+use Simply\Mvc\Controller\Resolvers\WpQueryResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver;
@@ -37,6 +38,9 @@ return static function (ContainerConfigurator $container) {
         ->tag('controller.argument_value_resolver', ['priority' => 100])
 
         ->set('argument_resolver.request', RequestValueResolver::class)
+        ->tag('controller.argument_value_resolver', ['priority' => 50])
+
+        ->set('argument_resolver.wp_query', WpQueryResolver::class)
         ->tag('controller.argument_value_resolver', ['priority' => 50])
 
         ->set('argument_resolver.session', SessionValueResolver::class)
