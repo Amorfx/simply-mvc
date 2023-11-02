@@ -10,6 +10,7 @@
     },
     "require": {
         "symfony/http-foundation": "^6.3",
-        "symfony/http-kernel": "^6.3"
+        "symfony/http-kernel": "^6.3",
+        "clementdecou/simply-maker": "^0.3"
     }
 }
