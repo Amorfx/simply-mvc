@@ -15,13 +15,13 @@
     },
     "require": {
         "php": ">=8.2",
-        "clementdecou/simply-framework": "^0.2.8",
-        "clementdecou/simply-maker": "^0.3.5",
-        "symfony/config": "^6.4",
-        "symfony/console": "^6.4",
-        "symfony/dependency-injection": "^6.4",
-        "symfony/http-foundation": "^6.4",
-        "symfony/http-kernel": "^6.4",
+        "clementdecou/simply-framework": "^0.3",
+        "clementdecou/simply-maker": "^0.4",
+        "symfony/config": "^7.4",
+        "symfony/console": "^7.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/http-foundation": "^7.4",
+        "symfony/http-kernel": "^7.4",
         "symfony/service-contracts": "^3.0"
     },
     "require-dev": {
@@ -33,5 +33,10 @@
     "scripts": {
         "test": "phpunit",
         "analyse": "phpstan analyse --memory-limit=1G --no-progress"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
     }
 }
