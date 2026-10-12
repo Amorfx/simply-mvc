@@ -7,6 +7,7 @@ use Simply;
 use Simply\Core\Attributes\Filter;
 use Simply\Core\Query\SimplyQuery;
 use Simply\Mvc\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -50,6 +51,15 @@ class TemplateInclude implements ServiceSubscriberInterface {
         $controller = $controllerResolver->getController($request);
         $arguments = $this->getArgumentResolver()->getArguments($request, $controller);
         $response = call_user_func_array($controller, $arguments);
+        if (!$response instanceof Response) {
+            throw new \LogicException(sprintf(
+                'The controller "%s::%s()" must return a "%s" object but it returned %s.',
+                $route->getController(),
+                $route->getAction(),
+                Response::class,
+                get_debug_type($response)
+            ));
+        }
         $response->send();
         return false;
     }
