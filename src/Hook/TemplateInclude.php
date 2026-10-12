@@ -7,7 +7,6 @@ use Simply;
 use Simply\Core\Attributes\Filter;
 use Simply\Core\Query\SimplyQuery;
 use Simply\Mvc\Request;
-use Simply\Mvc\Routing\WordPressRouteMatcher;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -27,7 +26,6 @@ class TemplateInclude implements ServiceSubscriberInterface {
     public static function getSubscribedServices(): array {
         return array(
             Router::class,
-            WordPressRouteMatcher::class,
             ArgumentResolver::class => 'argument_resolver'
         );
     }
@@ -37,56 +35,23 @@ class TemplateInclude implements ServiceSubscriberInterface {
         $request = Request::createFromGlobals();
         $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
         $router = $this->getRouter();
-        $routes = Simply::getContainer()->getParameter('simply.routes');
-        $router->addMultiple($routes);
-        $routesMatched = array();
-        $priorityRoute = false;
+        $router->addMultiple(Simply::getContainer()->getParameter('simply.routes'));
 
         // Remove .php for templates
-        foreach ($this->templates as $key => $t) {
-            $this->templates[$key] = str_replace('.php', '', $t);
+        $templates = array_map(static fn(string $t): string => str_replace('.php', '', $t), $this->templates);
+        $route = $router->findRoute($request, $templates);
+        if (null === $route) {
+            return $template;
         }
 
-        foreach ($router->getAll() as $r) {
-            if ($this->getMatcher()->match($r, $request, $this->templates)) {
-                if ($r->getCustomCondition() !== false) {
-                    $priorityRoute = $r;
-                    break;
-                } else {
-                    $routesMatched[] = $r;
-                }
-            }
-        }
-
-        /**
-         * Get the priority route :
-         * - Has custom condition => prior
-         * - Get the priority with template hierarchy
-         */
-        if (!$priorityRoute) {
-            foreach ($this->templates as $conditionToMatch) {
-                foreach ($routesMatched as $r) {
-                    if ($r->getWordpressCondition() === $conditionToMatch) {
-                        $priorityRoute = $r;
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        if ($priorityRoute) {
-            $controller = $priorityRoute->getController();
-            /** @var \Simply\Mvc\Controller\ControllerResolver $controllerResolver */
-            $controllerResolver = Simply::get('controller_resolver');
-            $request->attributes->set('_controller', array($controller, $r->getAction()));
-            $controller = $controllerResolver->getController($request);
-            $arguments = $this->getArgumentResolver()->getArguments($request, $controller);
-            $response = call_user_func_array($controller, $arguments);
-            $response->send();
-            return false;
-        }
-
-        return $template;
+        /** @var \Simply\Mvc\Controller\ControllerResolver $controllerResolver */
+        $controllerResolver = Simply::get('controller_resolver');
+        $request->attributes->set('_controller', array($route->getController(), $route->getAction()));
+        $controller = $controllerResolver->getController($request);
+        $arguments = $this->getArgumentResolver()->getArguments($request, $controller);
+        $response = call_user_func_array($controller, $arguments);
+        $response->send();
+        return false;
     }
 
     #[Filter('404_template_hierarchy')]
@@ -114,10 +79,6 @@ class TemplateInclude implements ServiceSubscriberInterface {
 
     public function getRouter(): Router {
         return $this->container->get(Router::class);
-    }
-
-    public function getMatcher(): WordPressRouteMatcher {
-        return $this->container->get(WordPressRouteMatcher::class);
     }
 
     public function getArgumentResolver() {
