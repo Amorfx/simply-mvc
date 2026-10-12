@@ -15,8 +15,8 @@
     },
     "require": {
         "php": ">=8.2",
-        "clementdecou/simply-framework": "^0.2.7",
-        "clementdecou/simply-maker": "^0.3",
+        "clementdecou/simply-framework": "^0.2.8",
+        "clementdecou/simply-maker": "^0.3.5",
         "symfony/config": "^6.4",
         "symfony/console": "^6.4",
         "symfony/dependency-injection": "^6.4",
