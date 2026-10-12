@@ -24,9 +24,9 @@ class WordPressRouteMatcher {
     public function match(Route $route, Request $request, array $templates): bool {
         $result = false;
 
-        // Verify request methods
-        $methodsCondition = in_array($request->getMethod(), $route->getMethods());
-        if (!$methodsCondition) {
+        // Verify request methods, HEAD is answered like GET
+        $method = $request->getMethod() === 'HEAD' ? 'GET' : $request->getMethod();
+        if (!in_array($method, $route->getMethods(), true)) {
             return false;
         }
 
