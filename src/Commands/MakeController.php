@@ -3,22 +3,21 @@
 namespace Simply\Mvc\Commands;
 
 use Simply\Maker\Command\AbstractMakeCommand;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(name: 'simply:make:controller', description: 'Create a controller.')]
 final class MakeController extends AbstractMakeCommand
 {
-    protected static $defaultName = 'simply:make:controller';
-
-    public function configure() {
+    public function configure(): void {
         parent::configure();
-        $this->setDescription('Create a controller.');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output) {
+    public function execute(InputInterface $input, OutputInterface $output): int {
         $io = new SymfonyStyle($input, $output);
         // the function set the root path for fileManager
         $this->askRootPath($io, $this->fileManager);

@@ -12,7 +12,7 @@ abstract class AbstractController implements ServiceSubscriberInterface {
     protected $container;
 
     #[Required]
-    public function setContainer(ContainerInterface $container = null): ?ContainerInterface
+    public function setContainer(?ContainerInterface $container = null): ?ContainerInterface
     {
         $previous = $this->container;
         $this->container = $container;
@@ -31,7 +31,7 @@ abstract class AbstractController implements ServiceSubscriberInterface {
      */
     protected function renderView(string $view, array $parameters = []): string {
         if (!$this->container->has('twig')) {
-            throw new \LogicException('You cannot use the "renderView" method if the Twig Bundle is not available. Try running "composer require symfony/twig-bundle".');
+            throw new \LogicException('You cannot use the "renderView" method because the Simply template engine is not available in the controller container.');
         }
 
         return $this->container->get('twig')->render($view, $parameters, false);
@@ -40,7 +40,7 @@ abstract class AbstractController implements ServiceSubscriberInterface {
     /**
      * Renders a view.
      */
-    protected function render(string $view, array $parameters = [], Response $response = null): Response {
+    protected function render(string $view, array $parameters = [], ?Response $response = null): Response {
         $content = $this->renderView($view, $parameters);
         if (null === $response) {
             $response = new Response();
