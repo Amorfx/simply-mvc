@@ -7,11 +7,14 @@ services:
   Simply\Mvc\:
     resource: '../src/'
     exclude:
-      - '../src/Application.php'
-      - '../src/Routing/Route.php'
-      - '../src/Attribute/*'
+      - '../src/Attribute/'
       - '../src/Controller/ControllerResolver.php'
+      - '../src/Controller/Resolvers/'
+      - '../src/DependencyInjection/'
+      - '../src/MvcPlugin.php'
+      - '../src/Request.php'
+      - '../src/Resources/'
+      - '../src/Routing/Route.php'
 
   Simply\Mvc\Hook\TemplateInclude:
     tags: ['container.service_subscriber']
-

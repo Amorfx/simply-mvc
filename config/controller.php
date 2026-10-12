@@ -15,8 +15,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 /**
- * Configuration for controller
- * @see https://github.com/symfony/framework-bundle/blob/5.3/Resources/config/web.php
+ * Controller resolution services, adapted from Symfony FrameworkBundle
  */
 return static function (ContainerConfigurator $container) {
     $container->services()
@@ -25,7 +24,6 @@ return static function (ContainerConfigurator $container) {
         ->args([
             service('service_container'),
         ])
-        ->tag('monolog.logger', ['channel' => 'request'])
 
         ->set('argument_metadata_factory', ArgumentMetadataFactory::class)
         ->set('argument_resolver', ArgumentResolver::class)

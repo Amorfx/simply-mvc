@@ -7,7 +7,6 @@ use Simply\Mvc\DependencyInjection\FrameworkExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\ControllerArgumentValueResolverPass;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
-use Symfony\Component\HttpKernel\DependencyInjection\RegisterLocaleAwareServicesPass;
 use Symfony\Component\HttpKernel\DependencyInjection\RemoveEmptyControllerArgumentLocatorsPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Simply\Mvc\DependencyInjection\Compiler\RoutePass;
@@ -22,7 +21,6 @@ class MvcPlugin implements PluginInterface {
         $container->addCompilerPass(new RemoveEmptyControllerArgumentLocatorsPass(), PassConfig::TYPE_BEFORE_REMOVING);
         // Add routing resolver pass simply not symfony
         $container->addCompilerPass(new ControllerArgumentValueResolverPass());
-        $container->addCompilerPass(new RegisterLocaleAwareServicesPass());
         $container->addCompilerPass(new RoutePass());
     }
 }

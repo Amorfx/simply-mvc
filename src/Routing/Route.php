@@ -2,8 +2,6 @@
 
 namespace Simply\Mvc\Routing;
 
-use JetBrains\PhpStorm\Pure;
-
 class Route {
     /**
      * WordPress template condition like single, front, home, category etc.
@@ -122,11 +120,9 @@ class Route {
 
     /**
      * Used to get instance after var export in cached container
-     * @param $array
-     *
-     * @return static
+     * @param array<string, mixed> $array
      */
-    #[Pure] public static function __set_state($array) {
-        return new static(...$array);
+    public static function __set_state(array $array): self {
+        return new self(...$array);
     }
 }
