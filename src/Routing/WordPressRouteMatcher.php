@@ -6,7 +6,7 @@ use Simply\Mvc\Request;
 
 class WordPressRouteMatcher {
     /**
-     * @var array<string, callable-string>
+     * @var array<int|string, callable-string>
      */
     private static array $mappConditions = array(
         '404' => 'is_404',
