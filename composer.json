@@ -8,9 +8,30 @@
             "Simply\\Mvc\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Simply\\Mvc\\Tests\\": "tests/"
+        }
+    },
     "require": {
-        "symfony/http-foundation": "^6.3",
-        "symfony/http-kernel": "^6.3",
-        "clementdecou/simply-maker": "^0.3"
+        "php": ">=8.2",
+        "clementdecou/simply-framework": "^0.2.7",
+        "clementdecou/simply-maker": "^0.3",
+        "symfony/config": "^6.4",
+        "symfony/console": "^6.4",
+        "symfony/dependency-injection": "^6.4",
+        "symfony/http-foundation": "^6.4",
+        "symfony/http-kernel": "^6.4",
+        "symfony/service-contracts": "^3.0"
+    },
+    "require-dev": {
+        "brain/monkey": "^2.6",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^11.5",
+        "szepeviktor/phpstan-wordpress": "^1.3"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse --memory-limit=1G --no-progress"
     }
 }
