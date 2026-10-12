@@ -2,20 +2,27 @@
 
 namespace Simply\Mvc\Hook;
 
+use Psr\Container\ContainerInterface;
 use Simply;
 use Simply\Core\Attributes\Filter;
 use Simply\Core\Query\SimplyQuery;
 use Simply\Mvc\Request;
 use Simply\Mvc\Routing\WordPressRouteMatcher;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\Contracts\Service\ServiceSubscriberTrait;
 use Simply\Mvc\Routing\Router;
 
 class TemplateInclude implements ServiceSubscriberInterface {
-    use ServiceSubscriberTrait;
+    private ContainerInterface $container;
 
     protected $templates = array();
+
+    #[Required]
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
+    }
 
     public static function getSubscribedServices(): array {
         return array(
