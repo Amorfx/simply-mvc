@@ -14,14 +14,20 @@ class Router {
     {
     }
 
-    public function add(Route $route) {
+    public function add(Route $route): void {
         $this->routes[] = $route;
     }
 
-    public function addMultiple(array $routes) {
+    /**
+     * @param Route[] $routes
+     */
+    public function addMultiple(array $routes): void {
         $this->routes = array_merge($this->routes, $routes);
     }
 
+    /**
+     * @return Route[]
+     */
     public function getAll(): array {
         return $this->routes;
     }

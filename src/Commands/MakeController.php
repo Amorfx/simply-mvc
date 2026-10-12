@@ -32,7 +32,7 @@ final class MakeController extends AbstractMakeCommand
         return Command::SUCCESS;
     }
 
-    public function getSkeletonPath($path): string {
+    public function getSkeletonPath(string $path): string {
         return __DIR__ . '/../Resources/skeleton' . $path;
     }
 }

@@ -11,6 +11,9 @@ use WP_Query;
  * Injects the main WordPress query in controller arguments typed WP_Query or named $wp_query
  */
 final class WpQueryResolver implements ValueResolverInterface {
+    /**
+     * @return iterable<\WP_Query>
+     */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable {
         $supported = $argument->getType() === WP_Query::class
             || $argument->getName() === 'wp_query'

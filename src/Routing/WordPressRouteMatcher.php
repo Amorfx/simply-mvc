@@ -5,7 +5,10 @@ namespace Simply\Mvc\Routing;
 use Simply\Mvc\Request;
 
 class WordPressRouteMatcher {
-    private static $mappConditions = array(
+    /**
+     * @var array<string, callable-string>
+     */
+    private static array $mappConditions = array(
         '404' => 'is_404',
         'archive' => 'is_archive',
         'attachment' => 'is_attachment',
@@ -21,6 +24,9 @@ class WordPressRouteMatcher {
         'tax' => 'is_tax',
     );
 
+    /**
+     * @param string[] $templates
+     */
     public function match(Route $route, Request $request, array $templates): bool {
         $result = false;
 

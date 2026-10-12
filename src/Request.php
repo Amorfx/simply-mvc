@@ -11,7 +11,7 @@ class Request extends \Symfony\Component\HttpFoundation\Request {
         return $this->simplyQuery;
     }
 
-    public function setSimplyQuery(SimplyQuery $simplyQuery) {
+    public function setSimplyQuery(SimplyQuery $simplyQuery): void {
         $this->simplyQuery = $simplyQuery;
     }
 }

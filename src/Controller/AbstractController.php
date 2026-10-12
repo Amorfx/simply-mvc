@@ -9,6 +9,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 abstract class AbstractController implements ServiceSubscriberInterface {
+    /** @var ContainerInterface|null */
     protected $container;
 
     #[Required]
@@ -28,6 +29,7 @@ abstract class AbstractController implements ServiceSubscriberInterface {
 
     /**
      * Returns a rendered view.
+     * @param array<string, mixed> $parameters
      */
     protected function renderView(string $view, array $parameters = []): string {
         if (!$this->container->has('twig')) {
@@ -39,6 +41,7 @@ abstract class AbstractController implements ServiceSubscriberInterface {
 
     /**
      * Renders a view.
+     * @param array<string, mixed> $parameters
      */
     protected function render(string $view, array $parameters = [], ?Response $response = null): Response {
         $content = $this->renderView($view, $parameters);

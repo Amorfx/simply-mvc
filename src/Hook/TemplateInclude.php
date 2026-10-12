@@ -16,7 +16,10 @@ use Simply\Mvc\Routing\Router;
 class TemplateInclude implements ServiceSubscriberInterface {
     private ContainerInterface $container;
 
-    protected $templates = array();
+    /**
+     * @var string[]
+     */
+    protected array $templates = [];
 
     #[Required]
     public function setContainer(ContainerInterface $container): void
@@ -31,8 +34,12 @@ class TemplateInclude implements ServiceSubscriberInterface {
         );
     }
 
+    /**
+     * @param mixed $template template path chosen by WordPress (filter value)
+     * @return mixed the template to include, or false when a controller sent the response
+     */
     #[Filter('template_include')]
-    public function sendResponse($template) {
+    public function sendResponse(mixed $template): mixed {
         $request = Request::createFromGlobals();
         $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
         $router = $this->getRouter();
@@ -82,7 +89,11 @@ class TemplateInclude implements ServiceSubscriberInterface {
     #[Filter('singular_template_hierarchy')]
     #[Filter('tag_template_hierarchy')]
     #[Filter('taxonomy_template_hierarchy')]
-    public function addTemplates($templates) {
+    /**
+     * @param mixed $templates template hierarchy (filter value)
+     * @return mixed the hierarchy, unchanged
+     */
+    public function addTemplates(mixed $templates): mixed {
         $this->templates = array_unique(array_merge($this->templates, $templates));
         return $templates;
     }
@@ -91,7 +102,7 @@ class TemplateInclude implements ServiceSubscriberInterface {
         return $this->container->get(Router::class);
     }
 
-    public function getArgumentResolver() {
+    public function getArgumentResolver(): ArgumentResolver {
         return $this->container->get(ArgumentResolver::class);
     }
 }

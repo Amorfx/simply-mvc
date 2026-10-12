@@ -11,7 +11,7 @@ class Route {
 
     /**
      * HTTP methods
-     * @var array
+     * @var string[]
      */
     protected array $methods;
 
@@ -35,7 +35,7 @@ class Route {
 
     /**
      * @param string $wordpressCondition
-     * @param array $methods
+     * @param string[] $methods
      * @param string $controller
      * @param string $action
      * @param string|object|bool $customCondition
@@ -63,14 +63,14 @@ class Route {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getMethods(): array {
         return $this->methods;
     }
 
     /**
-     * @param array $methods
+     * @param string[] $methods
      */
     public function setMethods(array $methods): void {
         $this->methods = $methods;

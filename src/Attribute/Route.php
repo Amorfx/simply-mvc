@@ -6,6 +6,9 @@ use Attribute;
 
 #[Attribute]
 class Route {
+    /**
+     * @param string[] $methods
+     */
     public function __construct(
         private string $wpCondition,
         private array $methods = array('GET', 'POST'),
