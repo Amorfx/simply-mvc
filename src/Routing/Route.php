@@ -4,6 +4,11 @@ namespace Simply\Mvc\Routing;
 
 class Route {
     /**
+     * Conditions whose template in the WordPress hierarchy has another name
+     */
+    private const TEMPLATE_NAMES = ['front' => 'front-page', 'tax' => 'taxonomy'];
+
+    /**
      * WordPress template condition like single, front, home, category etc.
      * @var string
      */
@@ -53,6 +58,13 @@ class Route {
      */
     public function getWordpressCondition(): string {
         return $this->wordpressCondition;
+    }
+
+    /**
+     * Name of the condition in the WordPress template hierarchy
+     */
+    public function getTemplateName(): string {
+        return self::TEMPLATE_NAMES[$this->wordpressCondition] ?? $this->wordpressCondition;
     }
 
     /**

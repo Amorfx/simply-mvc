@@ -64,4 +64,33 @@ class RouterTest extends MvcTestCase
 
         $this->assertSame($tax, $this->router($tax)->findRoute(Request::create('/genre/rock/'), ['taxonomy-genre-rock', 'taxonomy-genre', 'taxonomy', 'archive', 'index']));
     }
+
+    /**
+     * WordPress names these templates "front-page" and "taxonomy": the routes must keep that precedence
+     * whatever the declaration order
+     *
+     * @param string[] $templates
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('competingRoutes')]
+    public function testSpecificConditionWinsOverBroaderOne(string $specific, string $broader, string $conditionFunction, array $templates): void
+    {
+        Monkey\Functions\when($conditionFunction)->justReturn(true);
+        $specificRoute = $this->route($specific, $specific);
+        $broaderRoute = $this->route($broader, $broader);
+
+        $this->assertSame($specificRoute, $this->router($specificRoute, $broaderRoute)->findRoute(Request::create('/'), $templates));
+        $this->assertSame($specificRoute, $this->router($broaderRoute, $specificRoute)->findRoute(Request::create('/'), $templates));
+    }
+
+    /**
+     * @return array<string, array{string, string, string, string[]}>
+     */
+    public static function competingRoutes(): array
+    {
+        return [
+            'front over home' => ['front', 'home', 'is_front_page', ['front-page', 'home', 'index']],
+            'front over page' => ['front', 'page', 'is_front_page', ['front-page', 'page-sample-page', 'page-2', 'page', 'singular', 'index']],
+            'tax over archive' => ['tax', 'archive', 'is_tax', ['taxonomy-genre-rock', 'taxonomy-genre', 'taxonomy', 'archive', 'index']],
+        ];
+    }
 }

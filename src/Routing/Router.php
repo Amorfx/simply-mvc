@@ -36,7 +36,7 @@ class Router {
      * Find the route to call for the request:
      * - a matching route with a custom condition wins,
      * - otherwise the matching route for the most specific template of the hierarchy,
-     * - otherwise the first matching route (conditions like "front" or "tax" have no template of that name).
+     * - otherwise the first matching route (broad conditions like "archive" can match without being in the hierarchy).
      *
      * @param string[] $templates WordPress template hierarchy without ".php", most specific first
      */
@@ -57,7 +57,7 @@ class Router {
 
         foreach ($templates as $template) {
             foreach ($matchedRoutes as $route) {
-                if ($route->getWordpressCondition() === $template) {
+                if ($route->getTemplateName() === $template) {
                     return $route;
                 }
             }

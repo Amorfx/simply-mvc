@@ -30,14 +30,15 @@ class WordPressRouteMatcher {
     public function match(Route $route, Request $request, array $templates): bool {
         $result = false;
 
-        // Verify request methods, HEAD is answered like GET
-        $method = $request->getMethod() === 'HEAD' ? 'GET' : $request->getMethod();
-        if (!in_array($method, $route->getMethods(), true)) {
+        // Verify request methods, HEAD is also answered by GET routes
+        $method = $request->getMethod();
+        $methods = $route->getMethods();
+        if (!in_array($method, $methods, true) && !($method === 'HEAD' && in_array('GET', $methods, true))) {
             return false;
         }
 
         // Verify templates
-        if (in_array($route->getWordpressCondition(), $templates)) {
+        if (in_array($route->getTemplateName(), $templates, true)) {
             $result = true;
         } elseif (array_key_exists($route->getWordpressCondition(), self::$mappConditions)) {
             $result = call_user_func(self::$mappConditions[$route->getWordpressCondition()]);

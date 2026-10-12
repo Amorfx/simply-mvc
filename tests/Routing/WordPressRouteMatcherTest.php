@@ -38,4 +38,11 @@ class WordPressRouteMatcherTest extends MvcTestCase
 
         $this->assertFalse((new WordPressRouteMatcher())->match($route, Request::create('/'), ['home', 'index']));
     }
+
+    public function testHeadMatchesARouteDeclaringHead(): void
+    {
+        $route = new Route('single', ['HEAD'], 'App\\Controller', 'ping');
+
+        $this->assertTrue((new WordPressRouteMatcher())->match($route, Request::create('/', 'HEAD'), ['single']));
+    }
 }
