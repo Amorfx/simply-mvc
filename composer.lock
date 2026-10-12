@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f487834b7a3a774fb2fc4220189c175c",
+    "content-hash": "d5363f7eeabc726150622a5c33a265fa",
     "packages": [
         {
             "name": "clementdecou/simply-framework",
-            "version": "v0.2.7",
+            "version": "v0.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Amorfx/simply-framework.git",
-                "reference": "e912a70c7b0662f7a8a35f50cde374e9edd3d534"
+                "reference": "8c56e7afc4db38bfed7719ec8d39659799745826"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Amorfx/simply-framework/zipball/e912a70c7b0662f7a8a35f50cde374e9edd3d534",
-                "reference": "e912a70c7b0662f7a8a35f50cde374e9edd3d534",
+                "url": "https://api.github.com/repos/Amorfx/simply-framework/zipball/8c56e7afc4db38bfed7719ec8d39659799745826",
+                "reference": "8c56e7afc4db38bfed7719ec8d39659799745826",
                 "shasum": ""
             },
             "require": {
@@ -25,14 +25,19 @@
                 "symfony/config": "^6.4",
                 "symfony/dependency-injection": "^6.4",
                 "symfony/finder": "^6.4",
-                "symfony/proxy-manager-bridge": "^6.4",
                 "symfony/yaml": "^6.4",
-                "twig/twig": "^3.8"
+                "twig/twig": "^3.27"
             },
             "require-dev": {
                 "brain/monkey": "~2.6",
+                "friendsofphp/php-cs-fixer": "^3.51",
+                "php-stubs/wp-cli-stubs": "^2.10",
+                "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "~9.5",
-                "yoast/phpunit-polyfills": "^1.0"
+                "symfony/console": "6.4.4",
+                "symfony/var-dumper": "^7.0",
+                "szepeviktor/phpstan-wordpress": "^1.3",
+                "yoast/phpunit-polyfills": "^2.0"
             },
             "type": "wordpress-muplugin",
             "autoload": {
@@ -48,27 +53,27 @@
             "homepage": "https://amorfx.github.io/simply-documentation/",
             "support": {
                 "issues": "https://github.com/Amorfx/simply-framework/issues",
-                "source": "https://github.com/Amorfx/simply-framework/tree/v0.2.7"
+                "source": "https://github.com/Amorfx/simply-framework/tree/v0.2.8"
             },
-            "time": "2024-02-01T09:36:39+00:00"
+            "time": "2026-10-12T19:42:43+00:00"
         },
         {
             "name": "clementdecou/simply-maker",
-            "version": "v0.3.4",
+            "version": "v0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Amorfx/simply-maker.git",
-                "reference": "39c5635403ca5b28bbc29896ba22807042e9f0e1"
+                "reference": "c7048f9ae2a9a3480265663af13708c3ba7db732"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Amorfx/simply-maker/zipball/39c5635403ca5b28bbc29896ba22807042e9f0e1",
-                "reference": "39c5635403ca5b28bbc29896ba22807042e9f0e1",
+                "url": "https://api.github.com/repos/Amorfx/simply-maker/zipball/c7048f9ae2a9a3480265663af13708c3ba7db732",
+                "reference": "c7048f9ae2a9a3480265663af13708c3ba7db732",
                 "shasum": ""
             },
             "require": {
-                "clementdecou/simply-framework": "^0.2",
-                "php": ">=8.2, <8.3",
+                "clementdecou/simply-framework": "^0.2.8",
+                "php": ">=8.2",
                 "symfony/console": "6.4.*",
                 "symfony/filesystem": "6.4.*",
                 "symfony/finder": "6.4.*",
@@ -94,154 +99,9 @@
             "homepage": "https://amorfx.github.io/simply-documentation/docs/simply-cli/intro",
             "support": {
                 "issues": "https://github.com/Amorfx/simply-maker/issues",
-                "source": "https://github.com/Amorfx/simply-maker/tree/v0.3.4"
+                "source": "https://github.com/Amorfx/simply-maker/tree/v0.3.5"
             },
-            "time": "2024-02-01T09:49:43+00:00"
-        },
-        {
-            "name": "friendsofphp/proxy-manager-lts",
-            "version": "v1.0.19",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfPHP/proxy-manager-lts.git",
-                "reference": "c20299aa9f48a622052964a75c5a4cef017398b2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/c20299aa9f48a622052964a75c5a4cef017398b2",
-                "reference": "c20299aa9f48a622052964a75c5a4cef017398b2",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-code": "~3.4.1|^4.0",
-                "php": ">=7.1",
-                "symfony/filesystem": "^4.4.17|^5.0|^6.0|^7.0|^8.0"
-            },
-            "conflict": {
-                "laminas/laminas-stdlib": "<3.2.1",
-                "zendframework/zend-stdlib": "<3.2.1"
-            },
-            "replace": {
-                "ocramius/proxy-manager": "^2.1"
-            },
-            "require-dev": {
-                "ext-phar": "*",
-                "symfony/phpunit-bridge": "^5.4|^6.0|^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/Ocramius/ProxyManager",
-                    "name": "ocramius/proxy-manager"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "ProxyManager\\": "src/ProxyManager"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com",
-                    "homepage": "https://ocramius.github.io/"
-                },
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                }
-            ],
-            "description": "Adding support for a wider range of PHP versions to ocramius/proxy-manager",
-            "homepage": "https://github.com/FriendsOfPHP/proxy-manager-lts",
-            "keywords": [
-                "aop",
-                "lazy loading",
-                "proxy",
-                "proxy pattern",
-                "service proxies"
-            ],
-            "support": {
-                "issues": "https://github.com/FriendsOfPHP/proxy-manager-lts/issues",
-                "source": "https://github.com/FriendsOfPHP/proxy-manager-lts/tree/v1.0.19"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/Ocramius",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ocramius/proxy-manager",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-10-28T10:28:17+00:00"
-        },
-        {
-            "name": "laminas/laminas-code",
-            "version": "4.17.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "40d61e2899ec17c5d08bbc0a2d586b3ca17ab9bd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/40d61e2899ec17c5d08bbc0a2d586b3ca17ab9bd",
-                "reference": "40d61e2899ec17c5d08bbc0a2d586b3ca17ab9bd",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
-            },
-            "require-dev": {
-                "doctrine/annotations": "^2.0.1",
-                "ext-phar": "*",
-                "laminas/laminas-coding-standard": "^3.0.0",
-                "laminas/laminas-stdlib": "^3.18.0",
-                "phpunit/phpunit": "^10.5.58",
-                "psalm/plugin-phpunit": "^0.19.0",
-                "vimeo/psalm": "^5.15.0"
-            },
-            "suggest": {
-                "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
-                "laminas/laminas-stdlib": "Laminas\\Stdlib component"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Laminas\\Code\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Extensions to the PHP Reflection API, static code scanning, and code generation",
-            "homepage": "https://laminas.dev",
-            "keywords": [
-                "code",
-                "laminas",
-                "laminasframework"
-            ],
-            "support": {
-                "chat": "https://laminas.dev/chat",
-                "docs": "https://docs.laminas.dev/laminas-code/",
-                "forum": "https://discourse.laminas.dev",
-                "issues": "https://github.com/laminas/laminas-code/issues",
-                "rss": "https://github.com/laminas/laminas-code/releases.atom",
-                "source": "https://github.com/laminas/laminas-code"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2025-11-01T09:38:14+00:00"
+            "time": "2026-10-12T19:48:01+00:00"
         },
         {
             "name": "psr/container",
@@ -1807,77 +1667,6 @@
                 }
             ],
             "time": "2026-09-25T15:46:47+00:00"
-        },
-        {
-            "name": "symfony/proxy-manager-bridge",
-            "version": "v6.4.28",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/proxy-manager-bridge.git",
-                "reference": "9ecac7f98ad685d474394dbd06dab29bab4e18a6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/proxy-manager-bridge/zipball/9ecac7f98ad685d474394dbd06dab29bab4e18a6",
-                "reference": "9ecac7f98ad685d474394dbd06dab29bab4e18a6",
-                "shasum": ""
-            },
-            "require": {
-                "friendsofphp/proxy-manager-lts": "^1.0.2",
-                "php": ">=8.1",
-                "symfony/dependency-injection": "^6.3|^7.0",
-                "symfony/deprecation-contracts": "^2.5|^3"
-            },
-            "require-dev": {
-                "symfony/config": "^6.1|^7.0"
-            },
-            "type": "symfony-bridge",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Bridge\\ProxyManager\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Provides integration for ProxyManager with various Symfony components",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/proxy-manager-bridge/tree/v6.4.28"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-11-02T18:11:54+00:00"
         },
         {
             "name": "symfony/service-contracts",
