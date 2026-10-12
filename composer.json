@@ -27,7 +27,7 @@
     "require-dev": {
         "brain/monkey": "^2.6",
         "phpstan/phpstan": "^2",
-        "phpunit/phpunit": "^11.5",
+        "phpunit/phpunit": "^13.0",
         "szepeviktor/phpstan-wordpress": "^2"
     },
     "scripts": {
