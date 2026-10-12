@@ -2,84 +2,105 @@
 
 namespace Simply\Mvc\Hook;
 
+use Psr\Container\ContainerInterface;
 use Simply;
 use Simply\Core\Attributes\Filter;
 use Simply\Core\Query\SimplyQuery;
 use Simply\Mvc\Request;
-use Simply\Mvc\Routing\WordPressRouteMatcher;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\Contracts\Service\ServiceSubscriberTrait;
 use Simply\Mvc\Routing\Router;
 
 class TemplateInclude implements ServiceSubscriberInterface {
-    use ServiceSubscriberTrait;
+    private ContainerInterface $container;
 
-    protected $templates = array();
+    /**
+     * @var string[]
+     */
+    protected array $templates = [];
+
+    private bool $routesLoaded = false;
+
+    #[Required]
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
+    }
 
     public static function getSubscribedServices(): array {
         return array(
             Router::class,
-            WordPressRouteMatcher::class,
             ArgumentResolver::class => 'argument_resolver'
         );
     }
 
+    /**
+     * @param mixed $template template path chosen by WordPress (filter value)
+     * @return mixed the template to include, or false when a controller sent the response
+     */
     #[Filter('template_include')]
-    public function sendResponse($template) {
-        $request = Request::createFromGlobals();
-        $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
-        $router = $this->getRouter();
-        $routes = Simply::getContainer()->getParameter('simply.routes');
-        $router->addMultiple($routes);
-        $routesMatched = array();
-        $priorityRoute = false;
+    public function sendResponse(mixed $template): mixed {
+        $request = $this->createRequest();
 
         // Remove .php for templates
-        foreach ($this->templates as $key => $t) {
-            $this->templates[$key] = str_replace('.php', '', $t);
+        $templates = array_map(static fn(string $t): string => str_replace('.php', '', $t), $this->templates);
+        $route = $this->getLoadedRouter()->findRoute($request, $templates);
+        if (null === $route) {
+            return $template;
         }
 
-        foreach ($router->getAll() as $r) {
-            if ($this->getMatcher()->match($r, $request, $this->templates)) {
-                if ($r->getCustomCondition() !== false) {
-                    $priorityRoute = $r;
-                    break;
-                } else {
-                    $routesMatched[] = $r;
-                }
-            }
+        /** @var \Simply\Mvc\Controller\ControllerResolver $controllerResolver */
+        $controllerResolver = Simply::get('controller_resolver');
+        $request->attributes->set('_controller', array($route->getController(), $route->getAction()));
+        $controller = $controllerResolver->getController($request);
+        $arguments = $this->getArgumentResolver()->getArguments($request, $controller);
+        $response = call_user_func_array($controller, $arguments);
+        if (!$response instanceof Response) {
+            throw new \LogicException(sprintf(
+                'The controller "%s::%s()" must return a "%s" object but it returned %s.',
+                $route->getController(),
+                $route->getAction(),
+                Response::class,
+                get_debug_type($response)
+            ));
+        }
+        // prepare() removes the body of HEAD responses and normalises the headers
+        $response->prepare($request)->send();
+        return false;
+    }
+
+    /**
+     * WordPress stops HEAD requests before choosing a template: let them through when a route answers,
+     * so HEAD gets the same status and headers as GET.
+     * The template hierarchy is not known yet, so routes matching only a template name (e.g. "single-post") are not detected.
+     *
+     * @param mixed $exit whether WordPress exits without generating content (filter value)
+     * @return mixed
+     */
+    #[Filter('exit_on_http_head')]
+    public function letHeadReachControllers(mixed $exit): mixed {
+        if (!$exit) {
+            return $exit;
         }
 
-        /**
-         * Get the priority route :
-         * - Has custom condition => prior
-         * - Get the priority with template hierarchy
-         */
-        if (!$priorityRoute) {
-            foreach ($this->templates as $conditionToMatch) {
-                foreach ($routesMatched as $r) {
-                    if ($r->getWordpressCondition() === $conditionToMatch) {
-                        $priorityRoute = $r;
-                        break 2;
-                    }
-                }
-            }
-        }
+        return null === $this->getLoadedRouter()->findRoute($this->createRequest(), []) ? $exit : false;
+    }
 
-        if ($priorityRoute) {
-            $controller = $priorityRoute->getController();
-            /** @var \Simply\Mvc\Controller\ControllerResolver $controllerResolver */
-            $controllerResolver = Simply::get('controller_resolver');
-            $request->attributes->set('_controller', array($controller, $r->getAction()));
-            $controller = $controllerResolver->getController($request);
-            $arguments = $this->getArgumentResolver()->getArguments($request, $controller);
-            $response = call_user_func_array($controller, $arguments);
-            $response->send();
-            return false;
-        }
+    private function createRequest(): Request {
+        $request = Request::createFromGlobals();
+        $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
+        return $request;
+    }
 
-        return $template;
+    private function getLoadedRouter(): Router {
+        $router = $this->getRouter();
+        if (!$this->routesLoaded) {
+            $router->addMultiple(Simply::getContainer()->getParameter('simply.routes'));
+            $this->routesLoaded = true;
+        }
+        return $router;
     }
 
     #[Filter('404_template_hierarchy')]
@@ -100,7 +121,11 @@ class TemplateInclude implements ServiceSubscriberInterface {
     #[Filter('singular_template_hierarchy')]
     #[Filter('tag_template_hierarchy')]
     #[Filter('taxonomy_template_hierarchy')]
-    public function addTemplates($templates) {
+    /**
+     * @param mixed $templates template hierarchy (filter value)
+     * @return mixed the hierarchy, unchanged
+     */
+    public function addTemplates(mixed $templates): mixed {
         $this->templates = array_unique(array_merge($this->templates, $templates));
         return $templates;
     }
@@ -109,11 +134,7 @@ class TemplateInclude implements ServiceSubscriberInterface {
         return $this->container->get(Router::class);
     }
 
-    public function getMatcher(): WordPressRouteMatcher {
-        return $this->container->get(WordPressRouteMatcher::class);
-    }
-
-    public function getArgumentResolver() {
+    public function getArgumentResolver(): ArgumentResolver {
         return $this->container->get(ArgumentResolver::class);
     }
 }

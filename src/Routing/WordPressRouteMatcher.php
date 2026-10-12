@@ -5,7 +5,10 @@ namespace Simply\Mvc\Routing;
 use Simply\Mvc\Request;
 
 class WordPressRouteMatcher {
-    private static $mappConditions = array(
+    /**
+     * @var array<string, callable-string>
+     */
+    private static array $mappConditions = array(
         '404' => 'is_404',
         'archive' => 'is_archive',
         'attachment' => 'is_attachment',
@@ -21,17 +24,21 @@ class WordPressRouteMatcher {
         'tax' => 'is_tax',
     );
 
+    /**
+     * @param string[] $templates
+     */
     public function match(Route $route, Request $request, array $templates): bool {
         $result = false;
 
-        // Verify request methods
-        $methodsCondition = in_array($request->getMethod(), $route->getMethods());
-        if (!$methodsCondition) {
+        // Verify request methods, HEAD is also answered by GET routes
+        $method = $request->getMethod();
+        $methods = $route->getMethods();
+        if (!in_array($method, $methods, true) && !($method === 'HEAD' && in_array('GET', $methods, true))) {
             return false;
         }
 
         // Verify templates
-        if (in_array($route->getWordpressCondition(), $templates)) {
+        if (in_array($route->getTemplateName(), $templates, true)) {
             $result = true;
         } elseif (array_key_exists($route->getWordpressCondition(), self::$mappConditions)) {
             $result = call_user_func(self::$mappConditions[$route->getWordpressCondition()]);

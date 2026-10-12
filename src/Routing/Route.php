@@ -2,9 +2,12 @@
 
 namespace Simply\Mvc\Routing;
 
-use JetBrains\PhpStorm\Pure;
-
 class Route {
+    /**
+     * Conditions whose template in the WordPress hierarchy has another name
+     */
+    private const TEMPLATE_NAMES = ['front' => 'front-page', 'tax' => 'taxonomy'];
+
     /**
      * WordPress template condition like single, front, home, category etc.
      * @var string
@@ -13,7 +16,7 @@ class Route {
 
     /**
      * HTTP methods
-     * @var array
+     * @var string[]
      */
     protected array $methods;
 
@@ -37,7 +40,7 @@ class Route {
 
     /**
      * @param string $wordpressCondition
-     * @param array $methods
+     * @param string[] $methods
      * @param string $controller
      * @param string $action
      * @param string|object|bool $customCondition
@@ -58,6 +61,13 @@ class Route {
     }
 
     /**
+     * Name of the condition in the WordPress template hierarchy
+     */
+    public function getTemplateName(): string {
+        return self::TEMPLATE_NAMES[$this->wordpressCondition] ?? $this->wordpressCondition;
+    }
+
+    /**
      * @param string $wordpressCondition
      */
     public function setWordpressCondition(string $wordpressCondition): void {
@@ -65,14 +75,14 @@ class Route {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getMethods(): array {
         return $this->methods;
     }
 
     /**
-     * @param array $methods
+     * @param string[] $methods
      */
     public function setMethods(array $methods): void {
         $this->methods = $methods;
@@ -122,11 +132,9 @@ class Route {
 
     /**
      * Used to get instance after var export in cached container
-     * @param $array
-     *
-     * @return static
+     * @param array<string, mixed> $array
      */
-    #[Pure] public static function __set_state($array) {
-        return new static(...$array);
+    public static function __set_state(array $array): self {
+        return new self(...$array);
     }
 }

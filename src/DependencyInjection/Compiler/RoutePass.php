@@ -13,7 +13,7 @@ class RoutePass implements CompilerPassInterface {
     /**
      * @throws \ReflectionException
      */
-    public function process(ContainerBuilder $container) {
+    public function process(ContainerBuilder $container): void {
         $allController = $container->findTaggedServiceIds('simply.controller');
         $allRoutes = array();
         foreach ($allController as $serviceIds => $tag) {
