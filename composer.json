@@ -33,5 +33,10 @@
     "scripts": {
         "test": "phpunit",
         "analyse": "phpstan analyse --memory-limit=1G --no-progress"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
     }
 }
