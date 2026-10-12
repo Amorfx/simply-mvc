@@ -21,6 +21,8 @@ class TemplateInclude implements ServiceSubscriberInterface {
      */
     protected array $templates = [];
 
+    private bool $routesLoaded = false;
+
     #[Required]
     public function setContainer(ContainerInterface $container): void
     {
@@ -40,14 +42,11 @@ class TemplateInclude implements ServiceSubscriberInterface {
      */
     #[Filter('template_include')]
     public function sendResponse(mixed $template): mixed {
-        $request = Request::createFromGlobals();
-        $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
-        $router = $this->getRouter();
-        $router->addMultiple(Simply::getContainer()->getParameter('simply.routes'));
+        $request = $this->createRequest();
 
         // Remove .php for templates
         $templates = array_map(static fn(string $t): string => str_replace('.php', '', $t), $this->templates);
-        $route = $router->findRoute($request, $templates);
+        $route = $this->getLoadedRouter()->findRoute($request, $templates);
         if (null === $route) {
             return $template;
         }
@@ -67,8 +66,41 @@ class TemplateInclude implements ServiceSubscriberInterface {
                 get_debug_type($response)
             ));
         }
-        $response->send();
+        // prepare() removes the body of HEAD responses and normalises the headers
+        $response->prepare($request)->send();
         return false;
+    }
+
+    /**
+     * WordPress stops HEAD requests before choosing a template: let them through when a route answers,
+     * so HEAD gets the same status and headers as GET.
+     * The template hierarchy is not known yet, so routes matching only a template name (e.g. "single-post") are not detected.
+     *
+     * @param mixed $exit whether WordPress exits without generating content (filter value)
+     * @return mixed
+     */
+    #[Filter('exit_on_http_head')]
+    public function letHeadReachControllers(mixed $exit): mixed {
+        if (!$exit) {
+            return $exit;
+        }
+
+        return null === $this->getLoadedRouter()->findRoute($this->createRequest(), []) ? $exit : false;
+    }
+
+    private function createRequest(): Request {
+        $request = Request::createFromGlobals();
+        $request->setSimplyQuery(SimplyQuery::getCurrentQuery());
+        return $request;
+    }
+
+    private function getLoadedRouter(): Router {
+        $router = $this->getRouter();
+        if (!$this->routesLoaded) {
+            $router->addMultiple(Simply::getContainer()->getParameter('simply.routes'));
+            $this->routesLoaded = true;
+        }
+        return $router;
     }
 
     #[Filter('404_template_hierarchy')]
