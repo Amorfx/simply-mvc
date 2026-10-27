@@ -17,11 +17,11 @@
         "php": ">=8.2",
         "clementdecou/simply-framework": "^0.3",
         "clementdecou/simply-maker": "^0.4",
-        "symfony/config": "^7.4",
-        "symfony/console": "^7.4",
-        "symfony/dependency-injection": "^7.4",
-        "symfony/http-foundation": "^7.4",
-        "symfony/http-kernel": "^7.4",
+        "symfony/config": "^8.0",
+        "symfony/console": "^8.0",
+        "symfony/dependency-injection": "^8.0",
+        "symfony/http-foundation": "^8.0",
+        "symfony/http-kernel": "^8.0",
         "symfony/service-contracts": "^3.0"
     },
     "require-dev": {
